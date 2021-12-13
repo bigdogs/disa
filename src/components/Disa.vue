@@ -1,14 +1,13 @@
 <template>
-  <Disa />
+  <Left />
 </template>
 
 <script>
-import Disa from "./components/Disa.vue";
+import Left from "./Left.vue";
 
 export default {
-  name: "App",
   components: {
-    Disa,
+    Left,
   },
 };
 </script>
