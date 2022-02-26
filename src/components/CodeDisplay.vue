@@ -1,5 +1,12 @@
 <script setup>
+import config from "../data/config";
 import Ace from "./Ace.vue";
+
+const setEditor = (e) => {
+  config.resultSetter = (data) => {
+    return e.setValue(data, -1);
+  };
+};
 </script>
 
 <template>
@@ -8,6 +15,7 @@ import Ace from "./Ace.vue";
     :showGutter="false"
     :readOnly="true"
     :activeLine="false"
+    @setEditor="setEditor"
   />
 </template>
 

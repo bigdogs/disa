@@ -5,23 +5,24 @@ import config from "../data/config";
 
 <template>
   <div class="config">
-    <div class="config-direction">
-      <XButton
-        :fontSize="12"
-        :isActive="config.direction === 'assembly'"
-        @click="config.direction = 'assembly'"
-      >
-        Assembly
-      </XButton>
-      <XButton
-        :fontSize="12"
-        :isActive="config.direction === 'disassembly'"
-        @click="config.direction = 'disassembly'"
-      >
-        Disassembly
-      </XButton>
+    <div class="config-direction-box">
+      <div class="config-direction">
+        <XButton
+          :fontSize="12"
+          :isActive="config.direction === 'assembly'"
+          @click="config.direction = 'assembly'"
+        >
+          Assembly
+        </XButton>
+        <XButton
+          :fontSize="12"
+          :isActive="config.direction === 'disassembly'"
+          @click="config.direction = 'disassembly'"
+        >
+          Disassembly
+        </XButton>
+      </div>
     </div>
-    <div class="config-hr" />
     <div class="config-lang">
       <XButton
         :fontSize="15"
@@ -76,23 +77,34 @@ import config from "../data/config";
 .config {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .config-hr {
-    box-sizing: border-box;
+  .config-direction-box {
     width: 100%;
-    height: 1px;
-    border-top: 1px solid rgb(202, 200, 204);
-  }
-
-  .config-direction {
+    height: 30px;
     display: flex;
-    margin: 5px 0;
-    & > * {
-      margin-left: 4px;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    &::after {
+      content: "";
+      position: absolute;
+      box-sizing: border-box;
+      top: 0px;
+      left: 0px;
+      right: -2px;
+      bottom: -2px;
+      border-top: 1px solid rgb(229, 229, 229);
+      border-bottom: 1px solid rgb(229, 229, 229);
+      z-index: -1;
+    }
+    .config-direction {
+      display: flex;
+      & > * {
+        margin-left: 4px;
+      }
     }
   }
+
   .config-lang {
     margin-top: 6px;
     //补偿border

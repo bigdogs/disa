@@ -1,8 +1,17 @@
 <script setup>
-import { h, onMounted, watchEffect } from "vue";
-import useState from "../data/useState";
+import { computed, h, onMounted, watchEffect } from "vue";
+import useUIState from "../data/useUIState";
+import RunButton from "./RunButton.vue";
+import config from "../data/config";
 
-let { hideBottom, toggleBottom } = useState;
+let { hideBottom, toggleBottom, toggleLeft } = useUIState;
+
+const locationText = computed(() => {
+  if (config.editorCurrentRow == null || config.editorCurrentCol == null) {
+    return "";
+  }
+  return `Line: ${config.editorCurrentRow} Col: ${config.editorCurrentCol}`;
+});
 
 watchEffect(() => {
   if (hideBottom.value) {
@@ -21,7 +30,7 @@ onMounted(() => {
   // drag contant area is not working
   const statusBarHeight = parseInt(window.getComputedStyle(dragger).height);
   const minHeightContainer = statusBarHeight + 100 + 2;
-  const defaultHeightContainer = statusBarHeight + 120;
+  const defaultHeightContainer = statusBarHeight + 240;
   if (
     parseInt(window.getComputedStyle(container).height) < defaultHeightContainer
   ) {
@@ -90,13 +99,25 @@ onMounted(() => {
 <template>
   <div class="-tb-container">
     <div class="-lb-top-container">
-      <slot name="top"></slot>
+      <div class="-lb-top-container-bar">
+        <RunButton />
+      </div>
+      <div class="-lb-top-container-content">
+        <slot name="top"></slot>
+      </div>
     </div>
 
     <div class="-tb-bottom-container">
       <div class="-tb-line-status">
-        <div class="-tb-line-drag" />
-        <svg class="-tb-line-button" @click="toggleBottom()">
+        <svg class="-tb-line-button-left" @click="toggleLeft()">
+          <rect width="12" height="12" fill="#ff0000" />
+        </svg>
+        <div class="-tb-line-drag">
+          <div class="-tb-editor-location">
+            {{ locationText }}
+          </div>
+        </div>
+        <svg class="-tb-line-button-bottom" @click="toggleBottom()">
           <rect width="12" height="12" fill="#ff0000" />
         </svg>
       </div>
@@ -117,6 +138,24 @@ onMounted(() => {
   .-lb-top-container {
     flex: 1;
     min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    .-lb-top-container-bar {
+      height: 30px;
+      width: 100%;
+      border-top: 1px solid rgb(229, 229, 229);
+      border-bottom: 1px solid rgb(229, 229, 229);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      & > :first-child {
+        margin-left: 10px;
+      }
+    }
+    .-lb-top-container-content {
+      margin: 2px 0;
+      flex: 1;
+    }
   }
 
   .-tb-bottom-container {
@@ -131,15 +170,41 @@ onMounted(() => {
       display: flex;
       align-items: center;
 
+      .-tb-line-button-left {
+        width: 12px;
+        height: 12px;
+        margin-right: 5px;
+        margin-left: 10px;
+      }
+
       .-tb-line-drag {
         flex: 1;
         height: 100%;
         &:hover {
           cursor: row-resize;
         }
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        .-tb-editor-location {
+          position: relative;
+          margin-right: 10px;
+          color: rgb(170, 170, 170) !important;
+          font-size: 12px;
+          font-family: Menlo;
+          font-weight: bold;
+          &::after {
+            content: "";
+            position: absolute;
+            top: 1px;
+            bottom: 1px;
+            margin-left: 7px;
+            border-right: 1.5px solid rgb(230, 230, 230);
+          }
+        }
       }
 
-      .-tb-line-button {
+      .-tb-line-button-bottom {
         width: 12px;
         height: 12px;
         margin-right: 10px;

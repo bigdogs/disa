@@ -51,7 +51,7 @@ let hover = ref(false);
 
 .xcode-button-active-light {
   background: rgb(72, 161, 255);
-  color: rgb(198, 226, 255);
+  color: #fff;
 }
 
 .xcode-button-hover {

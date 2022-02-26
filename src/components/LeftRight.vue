@@ -1,12 +1,15 @@
 <script setup>
-import { onMounted } from "vue";
-import useState from "../data/useState";
+import { onMounted, onUpdated } from "vue";
+import useUIState from "../data/useUIState";
 
-let { hideLeft } = useState;
+let { hideLeft } = useUIState;
 
-onMounted(() => {
+const installEvent = () => {
   let resizeBox = document.querySelector(".-lr-l-resize");
   let leftContainer = document.querySelector(".-lr-left-container");
+  if (!resizeBox || !leftContainer) {
+    return;
+  }
 
   let startX;
   let startWidth;
@@ -44,12 +47,23 @@ onMounted(() => {
   };
 
   resizeBox.addEventListener("mousedown", function (e) {
+    console.log("mouse down");
     startResize(e);
     installEvent();
     document.body.addEventListener("mouseup", function () {
       removeEvent();
     });
   });
+};
+
+// as left part can be hidden or show dynamicly depends on current state
+// need install event on both  updated and mounted
+onUpdated(() => {
+  installEvent();
+});
+
+onMounted(() => {
+  installEvent();
 });
 </script>
 

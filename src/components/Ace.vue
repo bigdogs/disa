@@ -1,9 +1,9 @@
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import "../ace-min/ace";
 import "../ace-min/theme-xcode";
 
-const prop = defineProps({
+const props = defineProps({
   showGutter: {
     type: Boolean,
   },
@@ -16,20 +16,27 @@ const prop = defineProps({
   activeLine: {
     type: Boolean,
   },
+  editor: {
+    type: Object,
+  },
 });
 
+const emit = defineEmits(["setEditor"]);
+
 onMounted(() => {
-  const editor = ace.edit(prop.editorId);
+  // https://ace.c9.io/#nav=howto
+  const editor = ace.edit(props.editorId);
   editor.setTheme("ace/theme/xcode");
   editor.setShowPrintMargin(false);
-  editor.renderer.setShowGutter(prop.showGutter);
-  editor.setReadOnly(prop.readOnly);
-  editor.setHighlightActiveLine(prop.activeLine);
+  editor.renderer.setShowGutter(props.showGutter);
+  editor.setReadOnly(props.readOnly);
+  editor.setHighlightActiveLine(props.activeLine);
+  emit("setEditor", editor);
 });
 </script>
 
 <template>
-  <div class="code-editor" :id="prop.editorId"></div>
+  <div class="code-editor" :id="props.editorId"></div>
 </template>
 
 <style lang="scss">
@@ -43,19 +50,26 @@ onMounted(() => {
 }
 
 .ace_active-line {
-  background: rgba(236, 245, 255, 0.7) !important;
+  background: rgba(245, 246, 247, 0.7) !important;
 }
 
 .ace_gutter-active-line {
-  background: rgba(236, 245, 255, 0.7) !important;
+  background: rgba(245, 246, 247, 0.7) !important;
+}
+
+.ace_gutter-cell {
+  left: auto;
 }
 
 .ace_gutter {
   background: white !important;
   color: rgb(194, 194, 194) !important;
   font-size: 12px;
-  font-family: "Apple Color Emoji", SFMono-Regular, "SF Mono", ui-monospace,
-    "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  font-family: "DejaVu Sans Mono", Menlo, Consolas, monospace;
   line-height: 17px;
+}
+
+.ace_cursor {
+  border-left: 1.3px solid;
 }
 </style>
